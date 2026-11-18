@@ -82,6 +82,7 @@ services:
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
  
@@ -91,7 +92,8 @@ services:
     volumes:
       - logstash-data:/opt/logstash/work-dir
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
-
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
 
   kibana:
     image: kibana:9.5.5
