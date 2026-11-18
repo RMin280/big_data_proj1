@@ -75,7 +75,30 @@ services:
       spark://spark-master:7077
     volumes:
       - spark-data:/opt/spark/work-dir
+  
+  elasticsearch:
+    image: elasticsearch:9.5.5
+    container_name: elasticsearch
+    volumes:
+      - elasticsearch-data:/opt/elasticsearch/work-dir
+ 
+  logstash:
+    image: logstash:9.5.5
+    container_name: logstash
+    volumes:
+      - logstash-data:/opt/logstash/work-dir
+
+
+  kibana:
+    image: kibana:9.5.5
+    container_name: kibana
+    volumes:
+      - kibana-data
+
 
 volumes:
   kafka-data:
   spark-data:
+  elasticsearch-data:
+  logstash-data:
+  kibana-data:
