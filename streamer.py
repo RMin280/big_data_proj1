@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import finnhub
 import time
+import json
 
 load_dotenv()
 
@@ -17,8 +18,9 @@ producer = Producer(conf)
 
 finnhub_client = finnhub.Client(api_key=finnhub_key)
 
-print(finnhub_client.general_news('general', min_id=0))
-
 while True:
     msg = finnhub_client.general_news('general', min_id=0)
-    producer.produce(kafka_topic, msg)
+    producer.produce(kafka_topic, json.dumps(msg))
+    print("messsage sent")
+
+    time.sleep(1.0)
