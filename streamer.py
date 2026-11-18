@@ -8,19 +8,30 @@ import json
 
 load_dotenv()
 
-finnhub_key = os.getenv("FINNHUB_API_KEY")
-kafka_topic = 'topic1'
+def main():
+    finnhub_key = os.getenv("FINNHUB_API_KEY")
+    kafka_topic = 'topic1'
 
-conf = {'bootstrap.servers': 'kafka:9092',
-        'client.id': socket.gethostname()}
+    conf = {'bootstrap.servers': 'kafka:9092',
+            'client.id': socket.gethostname()}
 
-producer = Producer(conf)
+    producer = Producer(conf)
 
-finnhub_client = finnhub.Client(api_key=finnhub_key)
+    finnhub_client = finnhub.Client(api_key=finnhub_key)
 
-while True:
-    msg = finnhub_client.general_news('general', min_id=0)
-    producer.produce(kafka_topic, json.dumps(msg))
-    print("messsage sent")
+    last_id = 0
 
-    time.sleep(1.0)
+    while True:
+        msg = finnhub_client.general_news('general', min_id=last_id)
+        print(msg)
+        producer.produce(kafka_topic, json.dumps(msg))
+        for it in sorted(msg, key=lambda x: x["id"]):
+            raw = json.dumps({"id": it["id"], "datetime": it["datetime"], "headline": it["headline"], "summary": it["summary"]})
+            producer.produce("topic1", raw)
+            last_id = max(last_id, it["id"])
+        producer.flush()
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    main()
