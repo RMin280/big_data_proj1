@@ -107,6 +107,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+      - uv-cache:/root/.cache/uv
     environment:
       PYTHONUNBUFFERED: 1
     command: uv run --with confluent-kafka --with python-dotenv --with finnhub-python streamer.py
@@ -117,4 +118,4 @@ volumes:
   elasticsearch-data:
   logstash-data:
   kibana-data:
-
+  uv-cache:
