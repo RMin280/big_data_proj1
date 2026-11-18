@@ -101,6 +101,15 @@ services:
     volumes:
       - kibana-data:/usr/share/kibana/data
 
+  streamer:
+    image: ghcr.io/astral-sh/uv:python3.13-trixie-slim
+    container_name: streamer
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      PYTHONUNBUFFERED: 1
+    command: uv run --with confluent-kafka --with python-dotenv --with finnhub-python streamer.py
 
 volumes:
   kafka-data:
@@ -108,3 +117,4 @@ volumes:
   elasticsearch-data:
   logstash-data:
   kibana-data:
+
